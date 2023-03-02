@@ -91,7 +91,14 @@ class Renderer {
     //
     drawSlide0() {
         // TODO: draw bouncing ball (circle that changes direction whenever it hits an edge)
-        
+        let arr = [[1, 1, 1],
+                  [2, 2, 2],
+                  [3, 3, 3]];
+
+        let m1 = new Matrix(3, 3);
+        m1.values = arr;
+        let result = Matrix.multiply([m1, m1]);
+        console.log(result.values);
         
         // Following line is example of drawing a single polygon
         // (this should be removed/edited after you implement the slide)
