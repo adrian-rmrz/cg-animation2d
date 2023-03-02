@@ -66,6 +66,23 @@ class Renderer {
     //
     updateTransforms(time, delta_time) {
         // TODO: update any transformations needed for animation
+        
+        switch (this.slide_idx) {
+            case 0:
+                //translate
+                break;
+            case 1:
+                //Spinning
+                break;
+            case 2:
+                //Scalling
+                break;
+            case 3:
+                // Fun stuff
+                break;
+        }
+
+ 
     }
     
     //
@@ -110,13 +127,45 @@ class Renderer {
         ];
         let teal = [0, 128, 128, 255];
         this.drawConvexPolygon(diamond, teal);
+
+
     }
 
     //
     drawSlide1() {
         // TODO: draw at least 3 polygons that spin about their own centers
         //   - have each polygon spin at a different speed / direction
-        
+    
+        let twoTriangle = [
+            Vector3(100, 375, 1),
+            Vector3(200, 450, 1),
+            Vector3(150, 575, 1),
+            Vector3(175, 550, 1)
+        ];
+        let teal = [0, 128, 128, 255];
+        this.drawConvexPolygon(twoTriangle, teal);
+
+        let square = [
+            Vector3(600, 400, 1),
+            Vector3(700, 400, 1),
+            Vector3(700, 500, 1),
+            Vector3(600, 500, 1)
+        ];
+        let color = [100, 0, 255, 255];
+        this.drawConvexPolygon(square, color);
+
+        let polygon = [
+            Vector3(400, 100, 1),
+            Vector3(475, 170, 1),
+            Vector3(465, 250, 1),
+            Vector3(490, 300, 1),
+            Vector3(390, 350, 1),
+            Vector3(350, 200, 1),
+            Vector3(300, 150, 1),
+        ];
+        let col = [240, 120, 66, 255];
+        this.drawConvexPolygon(polygon, col);
+
         
     }
 
