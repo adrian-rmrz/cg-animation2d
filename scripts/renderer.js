@@ -12,6 +12,11 @@ class Renderer {
         this.fps = fps;
         this.start_time = null;
         this.prev_time = null;
+
+        //Slide0
+        this.ballMid = Vector3(400, 300, 1);
+        this.xFlip = 1;
+        this.yFlip = 1;
     }
 
     // flag:  bool
@@ -66,10 +71,34 @@ class Renderer {
     //
     updateTransforms(time, delta_time) {
         // TODO: update any transformations needed for animation
-        
         switch (this.slide_idx) {
             case 0:
-                //translate
+                // Translate
+                //console.log("Update ball: " + this.ball);
+                let translate = new Matrix(3, 3);
+                mat3x3Translate(translate, 0.0001*time, 0.0001*time);
+
+                let val = Matrix.multiply([translate, this.ballMid]);
+                console.log("Val: " + val.values);
+                let newPoint = [val.values[0]*this.xFlip, val.values[1]*this.yFlip, 1];
+                //console.log("newPoint: " + newPoint);
+                this.ballMid.values = newPoint;
+
+                if (this.ballMid.values[0] > this.canvas.width) {
+                    this.xFlip = -1;
+                } else if (this.ballMid.values[0] < 0) {
+                    this.xFlip = 1;
+                }
+                
+                if (this.ballMid.values[1] > this.canvas.height) {
+                    this.yFlip = -1;
+                } else if (this.ballMid.values[1] < 0) {
+                    this.yFlip = 1;
+                }
+
+                console.log("xFlip: " + this.xFlip);
+                console.log("yFlip: " + this.yFlip);
+
                 break;
             case 1:
                 //Spinning
@@ -108,26 +137,29 @@ class Renderer {
     //
     drawSlide0() {
         // TODO: draw bouncing ball (circle that changes direction whenever it hits an edge)
-        let arr = [[1, 1, 1],
-                  [2, 2, 2],
-                  [3, 3, 3]];
 
-        let m1 = new Matrix(3, 3);
-        m1.values = arr;
-        let result = Matrix.multiply([m1, m1]);
-        console.log(result.values);
+        let x = this.ballMid.values[0];
+        let y = this.ballMid.values[1];
+
         
-        // Following line is example of drawing a single polygon
-        // (this should be removed/edited after you implement the slide)
-        let diamond = [
-            Vector3(400, 150, 1),
-            Vector3(500, 300, 1),
-            Vector3(400, 450, 1),
-            Vector3(300, 300, 1)
-        ];
-        let teal = [0, 128, 128, 255];
-        this.drawConvexPolygon(diamond, teal);
+        let ball = [new Vector3(x-50, y, 1),
+                    new Vector3(x, y-50, 1),
+                    new Vector3(x-(-50), y, 1),
+                    new Vector3(x, y+50, 1)];
+        
+        /*
+        let ball = [Vector3(350, 300, 1),
+                    Vector3(400, 250, 1),
+                    Vector3(450, 300, 1),
+                    Vector3(400, 350, 1)];
+        */
+        //console.log("Ball[0]: " + ball[0].values);
+        //console.log("Ball[1]: " + ball[1].values);
+        //console.log("Ball[2]: " + ball[2].values);
+        //console.log("Ball[3]: " + ball[3].values);
 
+        let teal = [0, 128, 128, 255];
+        this.drawConvexPolygon(ball, teal);
 
     }
 
@@ -166,7 +198,20 @@ class Renderer {
         let col = [240, 120, 66, 255];
         this.drawConvexPolygon(polygon, col);
 
-        
+        let squareTranslate1 = new Matrix(3, 3);
+        mat3x3Translate(squareTranslate1, -650, -450);
+
+        let squareRotate = new Matrix(3,3);
+        mat3x3Rotate(squareRotate, 15);
+
+        let squareTranslate2 = new Matrix(3, 3);
+        mat3x3Translate(squareTranslate2, 650, 450);
+
+        for (let i = 0; i < square.length; i++) {
+            square[i] = Matrix.multiply([squareTranslate2, squareRotate, squareTranslate1, square[i]]);
+        }
+
+        console.log(square);
     }
 
     //
@@ -203,4 +248,5 @@ class Renderer {
         this.ctx.closePath();
         this.ctx.fill();
     }
+
 };
