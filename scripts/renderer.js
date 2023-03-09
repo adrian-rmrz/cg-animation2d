@@ -27,6 +27,21 @@ class Renderer {
             Vector3(700, 500, 1),
             Vector3(600, 500, 1)
         ];
+
+        //Slide2
+        this.diamond = [
+            new Vector3(200, 150, 1),
+            new Vector3(220, 200, 1),
+            new Vector3(200, 400, 1),
+            new Vector3(180, 200, 1)
+        ];
+
+        this.box = [
+            new Vector3(500, 400, 1),
+            new Vector3(700, 400, 1),
+            new Vector3(700, 500, 1),
+            new Vector3(500, 500, 1)
+        ];
     }
     // flag:  bool
     limitFps(flag) {
@@ -144,13 +159,43 @@ class Renderer {
                     let newSquareY = parseFloat(val.values[1]);
                     let squareNewPoint = [newSquareX, newSquareY, 1];
                     this.square[i].values = squareNewPoint;
-
                 }
-
                 console.log(this.square);
                 break;
             case 2:
                 //Scalling
+                let boxTranslate1 = new Matrix(3, 3);
+                mat3x3Translate(boxTranslate1, -600, -450);
+
+                let boxScale = new Matrix(3, 3);
+                mat3x3Scale(boxScale, 0.995, 0.995);
+
+                let boxTranslate2 = new Matrix(3, 3);
+                mat3x3Translate(boxTranslate2, 600, 450);
+
+                for (let i = 0; i < this.box.length; i++) {
+                    let val = Matrix.multiply([boxTranslate2, boxScale, boxTranslate1, this.box[i]]);
+                    let newBoxX = val.values[0][0];
+                    let newBoxY = val.values[1][0];
+                    this.box[i].values = [newBoxX, newBoxY, 1];
+                }
+
+                let diamondTranslate = new Matrix(3, 3);
+                mat3x3Translate(diamondTranslate, -200, -275);
+
+                let diamondScale = new Matrix(3, 3);
+                mat3x3Scale(diamondScale, 1.01, 1);
+
+                let diamondTranslate2 = new Matrix(3, 3);
+                mat3x3Translate(diamondTranslate2, 200, 275);
+
+                for (let i = 0; i < this.diamond.length; i++) {
+                    let val = Matrix.multiply([diamondTranslate2, diamondScale, diamondTranslate, this.diamond[i]]);
+                    let newDiamondX = val.values[0][0];
+                    let newDiamondY = val.values[1][0];
+                    this.diamond[i].values = [newDiamondX, newDiamondY, 1];
+                }
+
                 break;
             case 3:
                 // Fun stuff
@@ -272,7 +317,12 @@ class Renderer {
         //   - have each polygon grow / shrink different sizes
         //   - try at least 1 polygon that grows / shrinks non-uniformly in the x and y directions
 
+        let green = [0, 205, 50, 255];
+        //Grow in X
+        this.drawConvexPolygon(this.diamond, green);
 
+        let color = [255, 248, 180, 255];
+        this.drawConvexPolygon(this.box, color);
     }
 
     //
