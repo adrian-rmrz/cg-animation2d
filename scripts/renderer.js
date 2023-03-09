@@ -19,6 +19,51 @@ class Renderer {
         this.ballYFlip = 1;
         this.ballXVel = 1;
         this.ballYVel = 1;
+
+        //Slide1
+        this.square = [
+            Vector3(600, 400, 1),
+            Vector3(700, 400, 1),
+            Vector3(700, 500, 1),
+            Vector3(600, 500, 1)
+        ];
+
+        this.diamond = [
+            Vector3(150, 375, 1),
+            Vector3(200, 450, 1),
+            Vector3(150, 575, 1),
+            Vector3(100, 450, 1)
+        ];
+
+        this.triangle = [
+            Vector3(400, 100, 1),
+            Vector3(500, 100, 1),
+            Vector3(450, 250, 1)
+        ];
+
+        //Slide2
+        this.diamond1 = [
+            new Vector3(200, 150, 1),
+            new Vector3(220, 200, 1),
+            new Vector3(200, 400, 1),
+            new Vector3(180, 200, 1)
+        ];
+
+        this.box = [
+            new Vector3(500, 400, 1),
+            new Vector3(700, 400, 1),
+            new Vector3(700, 500, 1),
+            new Vector3(500, 500, 1)
+        ];
+
+        this.boxScale = new Matrix(3,3);
+        this.diamond1Scale = new Matrix(3,3);
+
+        this.boxXScale = 1;
+        this.boxYScale = 1;
+
+        this.diamond1XScale = 1;
+        this.diamond1YScale = 1;
     }
 
     // flag:  bool
@@ -90,8 +135,8 @@ class Renderer {
 
                 let translate = new Matrix(3, 3);
 
-                this.ballXVel = 0.1 * delta_time *this.ballXFlip;
-                this.ballYVel = 0.1 * delta_time *this.ballYFlip;
+                this.ballXVel = 0.1 * delta_time * this.ballXFlip;
+                this.ballYVel = 0.1 * delta_time * this.ballYFlip;
                 mat3x3Translate(translate, this.ballXVel, this.ballYVel);
 
                 //console.log("translate: " + translate.values);
@@ -105,7 +150,6 @@ class Renderer {
                 let newY = parseFloat(val.values[1]);
                 let newPoint = [newX, newY, 1];
 
-                
                 //console.log("newX: " + newX);
                 //console.log("xVel: " + this.ballXVel);
                 //console.log("newY: " + newY);
@@ -121,10 +165,142 @@ class Renderer {
 
                 break;
             case 1:
-                this.ballMid.values[0]
+                //Spinning
+
+                // Square
+                let squareTranslate1 = new Matrix(3, 3);
+                mat3x3Translate(squareTranslate1, -650, -450);
+        
+                let squareRotate = new Matrix(3,3);
+                mat3x3Rotate(squareRotate, (0.01*delta_time));
+        
+                let squareTranslate2 = new Matrix(3, 3);
+                mat3x3Translate(squareTranslate2, 650, 450);
+
+                // Diamond 
+                let diamondTranslate1 = new Matrix(3, 3);
+                mat3x3Translate(diamondTranslate1, -150, -475);
+        
+                let diamondRotate = new Matrix(3,3);
+                mat3x3Rotate(diamondRotate, (-0.01*delta_time));
+        
+                let diamondTranslate2 = new Matrix(3, 3);
+                mat3x3Translate(diamondTranslate2, 150, 475);
+
+                // Triangle
+                let triangleTranslate1 = new Matrix(3, 3);
+                mat3x3Translate(triangleTranslate1, -450, -175);
+        
+                let triangleRotate = new Matrix(3,3);
+                mat3x3Rotate(triangleRotate, (0.05*delta_time));
+        
+                let triangleTranslate2 = new Matrix(3, 3);
+                mat3x3Translate(triangleTranslate2, 450, 175);
+        
+                for (let i = 0; i < this.square.length; i++) {
+                    /*
+                    console.log("===Square[i]====: " + this.square[i].values);
+                    console.log("Mult: " + Matrix.multiply([squareTranslate1, this.square[i]]).values);
+                    */
+
+                    let val = Matrix.multiply([squareTranslate2, squareRotate, squareTranslate1, this.square[i]]);
+                    let squareNewX = parseFloat(val.values[0]);
+                    let squareNewY = parseFloat(val.values[1]);
+                    let squareNewPoint = [squareNewX, squareNewY, 1]
+                    this.square[i].values = squareNewPoint;
+
+                    /*
+                    console.log("i: " + i);
+                    console.log("tran1: " + tran1.values);
+                    console.log("rot: " + rot.values);
+                    console.log("tran2: " + tran2.values);
+                    console.log("squareNewX: " + squareNewX);
+                    console.log("squareNewY: " + squareNewY);
+                    console.log("squareNewPoint: " + squareNewPoint);
+                    console.log("square[i]: " + this.square[i].values);
+                    */
+                }
+
+                for (let i = 0; i < this.diamond.length; i++) {
+                    let val = Matrix.multiply([diamondTranslate2, diamondRotate, diamondTranslate1, this.diamond[i]]);
+                    let diamondNewX = parseFloat(val.values[0]);
+                    let diamondNewY = parseFloat(val.values[1]);
+                    let diamondNewPoint = [diamondNewX, diamondNewY, 1]
+                    this.diamond[i].values = diamondNewPoint;
+
+                }
+
+                for (let i = 0; i < this.triangle.length; i++) {
+                    let val = Matrix.multiply([triangleTranslate2, triangleRotate, triangleTranslate1, this.triangle[i]]);
+                    let triangleNewX = parseFloat(val.values[0]);
+                    let triangleNewY = parseFloat(val.values[1]);
+                    let triangleNewPoint = [triangleNewX, triangleNewY, 1]
+                    this.triangle[i].values = triangleNewPoint;
+
+                }
+        
                 break;
             case 2:
-                //Scalling
+                //Scaling
+
+                let boxTranslate1 = new Matrix(3, 3);
+                mat3x3Translate(boxTranslate1, -600, -450);
+
+                let boxTranslate2 = new Matrix(3, 3);
+                mat3x3Translate(boxTranslate2, 600, 450);
+                
+                let boxWidth = this.box[1].values[0] - this.box[3].values[0];
+
+                if (boxWidth >= 200) {
+                    this.boxXScale = 0.9995;
+                    this.boxYScale = 0.9995;
+                } else if (boxWidth <= 50) {
+                    this.boxXScale = 1.0005;
+                    this.boxYScale = 1.0005;
+                }
+
+                mat3x3Scale(this.boxScale, Math.pow(this.boxXScale, delta_time), Math.pow(this.boxYScale, delta_time));
+
+                for (let i = 0; i < this.box.length; i++) {
+                    let val = Matrix.multiply([boxTranslate2, this.boxScale, boxTranslate1, this.box[i]]);
+                    let newBoxX = val.values[0][0];
+                    let newBoxY = val.values[1][0];
+                    this.box[i].values = [newBoxX, newBoxY, 1];
+                }
+
+                let diamond1Translate = new Matrix(3, 3);
+                mat3x3Translate(diamond1Translate, -200, -275);
+
+                let diamond1Translate2 = new Matrix(3, 3);
+                mat3x3Translate(diamond1Translate2, 200, 275);
+
+                let diamond1Width = this.diamond1[1].values[0] - this.diamond1[3].values[0];
+                let diamond1Height = this.diamond1[2].values[1] - this.diamond1[0].values[1];
+
+                if (diamond1Width >= 200) {
+                    this.diamond1XScale = 0.995;
+                } else if (diamond1Width <= 50) {
+                    this.diamond1XScale = 1.005;
+                }
+
+                if (diamond1Height >= 200) {
+                    this.diamond1YScale = 0.99;
+                } else if (diamond1Height <= 50) {
+                    this.diamond1YScale = 1.0005;
+                }
+
+                mat3x3Scale(this.diamond1Scale, Math.pow(this.diamond1XScale, delta_time), Math.pow(this.diamond1YScale, delta_time));
+
+                console.log("diamond1Width: " + diamond1Width);
+                console.log("diamond1Scale: " + this.diamond1Scale.values);
+
+                for (let i = 0; i < this.diamond.length; i++) {
+                    let val = Matrix.multiply([diamond1Translate2, this.diamond1Scale, diamond1Translate, this.diamond1[i]]);
+                    let newDiamondX = val.values[0][0];
+                    let newDiamondY = val.values[1][0];
+                    this.diamond1[i].values = [newDiamondX, newDiamondY, 1];
+                }
+
                 break;
             case 3:
                 // Fun stuff
@@ -161,14 +337,40 @@ class Renderer {
         let x = parseFloat(this.ballMid.values[0]);
         let y = parseFloat(this.ballMid.values[1]);
 
+        let ball = [
+            new Vector3(x-(-50), y, 1),
+            new Vector3(x-(-49), y+11, 1),
+            new Vector3(x-(-45), y+22, 1),
+            new Vector3(x-(-39), y+31, 1),
+            new Vector3(x-(-31), y+39, 1),
+            new Vector3(x-(-22), y+45, 1),
+            new Vector3(x-(-11), y+49, 1),
+            new Vector3(x, y+50, 1),
+            new Vector3(x-11, y+49, 1),
+            new Vector3(x-22, y+45, 1),
+            new Vector3(x-31, y+39, 1),
+            new Vector3(x-39, y+31, 1),
+            new Vector3(x-45, y+22, 1),
+            new Vector3(x-49, y+11, 1),
+            new Vector3(x-50, y, 1),
+            new Vector3(x-49, y-11, 1),
+            new Vector3(x-45, y-22, 1),
+            new Vector3(x-39, y-31, 1),
+            new Vector3(x-31, y-39, 1),
+            new Vector3(x-22, y-45, 1),
+            new Vector3(x-11, y-49, 1),
+            new Vector3(x, y-50, 1),
+            new Vector3(x-(-11), y-49, 1),
+            new Vector3(x-(-22), y-45, 1),
+            new Vector3(x-(-31), y-39, 1),
+            new Vector3(x-(-39), y-31, 1),
+            new Vector3(x-(-45), y-22, 1),
+            new Vector3(x-(-49), y-11, 1)
+           ];
         
-        let ball = [new Vector3(x-50, y, 1),
-                    new Vector3(x, y-50, 1),
-                    new Vector3(x-(-50), y, 1),
-                    new Vector3(x, y+50, 1)];
-        
-        let teal = [0, 128, 128, 255];
-        this.drawConvexPolygon(ball, teal);
+        let red = [255, 0, 0, 255];
+        this.drawConvexPolygon(ball, red);
+        // Need to implement circle thing
 
     }
 
@@ -177,59 +379,24 @@ class Renderer {
         // TODO: draw at least 3 polygons that spin about their own centers
         //   - have each polygon spin at a different speed / direction
     
-        let diamond = [
-            Vector3(150, 375, 1),
-            Vector3(200, 450, 1),
-            Vector3(150, 575, 1),
-            Vector3(100, 450, 1)
-        ];
-
-        let midDiamondx = 150;
-        let midDiamondy = 475;
+        // TODO: draw at least 3 polygons that spin about their own centers
+        //   - have each polygon spin at a different speed / direction
 
         let teal = [0, 128, 128, 255];
-        this.drawConvexPolygon(diamond, teal);
+        this.drawConvexPolygon(this.diamond, teal);
 
-        let square = [
-            Vector3(600, 400, 1),
-            Vector3(700, 400, 1),
-            Vector3(700, 500, 1),
-            Vector3(600, 500, 1)
-        ];
-        
-        let squareMidx = 650;
-        let squareMidy = 450;
 
         let color = [100, 0, 255, 255];
-        this.drawConvexPolygon(square, color);
 
-        let triange = [
-            Vector3(400, 100, 1),
-            Vector3(500, 100, 1),
-            Vector3(450, 250, 1)
-        ];
+        this.drawConvexPolygon(this.square, color);
 
         let triangleMidx = 450;
         let triangleMidy = 175;
 
         let col = [240, 120, 66, 255];
-        this.drawConvexPolygon(triange, col);
-
-        let squareTranslate1 = new Matrix(3, 3);
-        mat3x3Translate(squareTranslate1, -650, -450);
-
-        let squareRotate = new Matrix(3,3);
-        mat3x3Rotate(squareRotate, 15);
-
-        let squareTranslate2 = new Matrix(3, 3);
-        mat3x3Translate(squareTranslate2, 650, 450);
-
-        for (let i = 0; i < square.length; i++) {
-            square[i] = Matrix.multiply([squareTranslate2, squareRotate, squareTranslate1, square[i]]);
-        }
-
-        console.log(square);
+        this.drawConvexPolygon(this.triangle, col);
     }
+
 
     //
     drawSlide2() {
@@ -237,7 +404,12 @@ class Renderer {
         //   - have each polygon grow / shrink different sizes
         //   - try at least 1 polygon that grows / shrinks non-uniformly in the x and y directions
 
+        let green = [0, 205, 50, 255];
+        //Grow in X
+        this.drawConvexPolygon(this.diamond1, green);
 
+        let color = [255, 248, 180, 255];
+        this.drawConvexPolygon(this.box, color);
     }
 
     //
