@@ -26,8 +26,8 @@ function mat3x3Scale(mat3x3, sx, sy) {
 
 // Set values of existing 3x3 matrix to the rotate matrix
 function mat3x3Rotate(mat3x3, theta) {
-    mat3x3.values = [[Math.round(degrees_to_radians(Math.cos(theta))), ((-1)*(Math.round(degrees_to_radians(Math.sin(theta))))), 0],
-                    [Math.round(degrees_to_radians(Math.sin(theta))), Math.round(degrees_to_radians(Math.cos(theta))), 0],
+    mat3x3.values = [[Math.cos(degrees_to_radians(theta)), ((-1)*Math.cos(degrees_to_radians(theta))), 0],
+                    [Math.cos(degrees_to_radians(theta)), Math.cos(degrees_to_radians(theta)), 0],
                     [0, 0, 1]];
 }
 
