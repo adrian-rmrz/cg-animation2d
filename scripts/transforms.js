@@ -44,4 +44,3 @@ function Vector3(x, y, w) {
     vec3.values = [x, y, w];
     return vec3;
 }
-

@@ -15,8 +15,10 @@ class Renderer {
 
         //Slide0
         this.ballMid = Vector3(400, 300, 1);
-        this.xFlip = 1;
-        this.yFlip = 1;
+        this.ballXFlip = 1;
+        this.ballYFlip = 1;
+        this.ballXVel = 1;
+        this.ballYVel = 1;
     }
 
     // flag:  bool
@@ -74,30 +76,48 @@ class Renderer {
         switch (this.slide_idx) {
             case 0:
                 // Translate
-                //console.log("Update ball: " + this.ball);
-                let translate = new Matrix(3, 3);
-                mat3x3Translate(translate, 0.0001*time, 0.0001*time);
-
-                let val = Matrix.multiply([translate, this.ballMid]);
-                console.log("Val: " + val.values);
-                let newPoint = [val.values[0]*this.xFlip, val.values[1]*this.yFlip, 1];
-                //console.log("newPoint: " + newPoint);
-                this.ballMid.values = newPoint;
-
-                if (this.ballMid.values[0] > this.canvas.width) {
-                    this.xFlip = -1;
-                } else if (this.ballMid.values[0] < 0) {
-                    this.xFlip = 1;
+                if (this.ballMid.values[0] >= (this.canvas.width-50)) {
+                    this.ballXFlip = -1;
+                } else if (this.ballMid.values[0] <= 50) {
+                    this.ballXFlip = 1;
                 }
                 
-                if (this.ballMid.values[1] > this.canvas.height) {
-                    this.yFlip = -1;
-                } else if (this.ballMid.values[1] < 0) {
-                    this.yFlip = 1;
+                if (this.ballMid.values[1] >= (this.canvas.height-50)) {
+                    this.ballYFlip = -1;
+                } else if (this.ballMid.values[1] <= 100) {
+                    this.ballYFlip = 1;
                 }
 
-                console.log("xFlip: " + this.xFlip);
-                console.log("yFlip: " + this.yFlip);
+                let translate = new Matrix(3, 3);
+
+                this.ballXVel = 0.0001 * time *this.ballXFlip;
+                this.ballYVel = 0.0001 * time *this.ballYFlip;
+                mat3x3Translate(translate, this.ballXVel, this.ballYVel);
+
+                console.log("translate: " + translate.values);
+                console.log("Ball: " + this.ballMid.values);
+                
+                let val = Matrix.multiply([translate, this.ballMid]);
+
+                console.log("Val: " + val.values);
+
+                let newX = parseFloat(val.values[0]);
+                let newY = parseFloat(val.values[1]);
+                let newPoint = [newX, newY, 1];
+
+                
+                console.log("newX: " + newX);
+                console.log("xVel: " + this.ballXVel);
+                console.log("newY: " + newY);
+                console.log("yVel: " + this.ballYVel);
+                console.log("newPoint: " + newPoint);
+                console.log("Ball: " + this.ballMid.values);
+                
+
+                this.ballMid.values = newPoint;
+
+                console.log("xFlip: " + this.ballXFlip);
+                console.log("yFlip: " + this.ballYFlip);
 
                 break;
             case 1:
@@ -138,8 +158,8 @@ class Renderer {
     drawSlide0() {
         // TODO: draw bouncing ball (circle that changes direction whenever it hits an edge)
 
-        let x = this.ballMid.values[0];
-        let y = this.ballMid.values[1];
+        let x = parseFloat(this.ballMid.values[0]);
+        let y = parseFloat(this.ballMid.values[1]);
 
         
         let ball = [new Vector3(x-50, y, 1),
@@ -147,17 +167,6 @@ class Renderer {
                     new Vector3(x-(-50), y, 1),
                     new Vector3(x, y+50, 1)];
         
-        /*
-        let ball = [Vector3(350, 300, 1),
-                    Vector3(400, 250, 1),
-                    Vector3(450, 300, 1),
-                    Vector3(400, 350, 1)];
-        */
-        //console.log("Ball[0]: " + ball[0].values);
-        //console.log("Ball[1]: " + ball[1].values);
-        //console.log("Ball[2]: " + ball[2].values);
-        //console.log("Ball[3]: " + ball[3].values);
-
         let teal = [0, 128, 128, 255];
         this.drawConvexPolygon(ball, teal);
 
