@@ -19,8 +19,15 @@ class Renderer {
         this.ballYFlip = 1;
         this.ballXVel = 1;
         this.ballYVel = 1;
+    
+        //Slide1
+        this.square = [
+            Vector3(600, 400, 1),
+            Vector3(700, 400, 1),
+            Vector3(700, 500, 1),
+            Vector3(600, 500, 1)
+        ];
     }
-
     // flag:  bool
     limitFps(flag) {
         this.limit_fps = flag;
@@ -90,44 +97,65 @@ class Renderer {
 
                 let translate = new Matrix(3, 3);
 
-                this.ballXVel = 0.1 * delta_time * this.ballXFlip;
-                this.ballYVel = 0.1 * delta_time * this.ballYFlip;
+                this.ballXVel = 0.5 * delta_time *this.ballXFlip;
+                this.ballYVel = 0.5 * delta_time *this.ballYFlip;
                 mat3x3Translate(translate, this.ballXVel, this.ballYVel);
 
-                console.log("translate: " + translate.values);
-                console.log("Ball: " + this.ballMid.values);
+                //console.log("translate: " + translate.values);
+                //console.log("Ball: " + this.ballMid.values);
                 
                 let val = Matrix.multiply([translate, this.ballMid]);
 
-                console.log("Val: " + val.values);
+                //console.log("Val: " + val.values);
 
                 let newX = parseFloat(val.values[0]);
                 let newY = parseFloat(val.values[1]);
                 let newPoint = [newX, newY, 1];
 
                 
-                console.log("newX: " + newX);
-                console.log("xVel: " + this.ballXVel);
-                console.log("newY: " + newY);
-                console.log("yVel: " + this.ballYVel);
-                console.log("newPoint: " + newPoint);
-                console.log("Ball: " + this.ballMid.values);
+                //console.log("newX: " + newX);
+                //console.log("xVel: " + this.ballXVel);
+                //console.log("newY: " + newY);
+                //console.log("yVel: " + this.ballYVel);
+                //console.log("newPoint: " + newPoint);
+                //console.log("Ball: " + this.ballMid.values);
                 
 
                 this.ballMid.values = newPoint;
 
-                console.log("xFlip: " + this.ballXFlip);
-                console.log("yFlip: " + this.ballYFlip);
+                //console.log("xFlip: " + this.ballXFlip);
+                //console.log("yFlip: " + this.ballYFlip);
 
                 break;
             case 1:
-                //Spinning
+                // Spinning
+                let squareTranslate1 = new Matrix(3, 3);
+                mat3x3Translate(squareTranslate1, -100, -100);
+
+                let squareRotate = new Matrix(3, 3);
+                mat3x3Rotate(squareRotate, 15);
+
+                let squareTranslate2 = new Matrix(3, 3);
+                mat3x3Translate(squareTranslate2, 100, 100);
+
+                for (let i = 0; i < this.square.length; i++) {
+                    let val = Matrix.multiply([squareTranslate2, squareRotate, squareTranslate1, this.square[i]]);
+                    let newSquareX = parseFloat(val.values[0]);
+                    let newSquareY = parseFloat(val.values[1]);
+                    let squareNewPoint = [newSquareX, newSquareY, 1];
+                    this.square[i].values = squareNewPoint;
+
+                }
+
+                console.log(this.square);
                 break;
             case 2:
                 //Scalling
                 break;
             case 3:
                 // Fun stuff
+                
+                
                 break;
         }
 
@@ -162,14 +190,41 @@ class Renderer {
         let y = parseFloat(this.ballMid.values[1]);
 
         
-        let ball = [new Vector3(x-50, y, 1),
-                    new Vector3(x, y-50, 1),
-                    new Vector3(x-(-50), y, 1),
-                    new Vector3(x, y+50, 1)];
+        let ball = [
+            new Vector3(x-(-50), y, 1),
+            new Vector3(x-(-49), y+11, 1),
+            new Vector3(x-(-45), y+22, 1),
+            new Vector3(x-(-39), y+31, 1),
+            new Vector3(x-(-31), y+39, 1),
+            new Vector3(x-(-22), y+45, 1),
+            new Vector3(x-(-11), y+49, 1),
+            new Vector3(x, y+50, 1),
+            new Vector3(x-11, y+49, 1),
+            new Vector3(x-22, y+45, 1),
+            new Vector3(x-31, y+39, 1),
+            new Vector3(x-39, y+31, 1),
+            new Vector3(x-45, y+22, 1),
+            new Vector3(x-49, y+11, 1),
+            new Vector3(x-50, y, 1),
+            new Vector3(x-49, y-11, 1),
+            new Vector3(x-45, y-22, 1),
+            new Vector3(x-39, y-31, 1),
+            new Vector3(x-31, y-39, 1),
+            new Vector3(x-22, y-45, 1),
+            new Vector3(x-11, y-49, 1),
+            new Vector3(x, y-50, 1),
+            new Vector3(x-(-11), y-49, 1),
+            new Vector3(x-(-22), y-45, 1),
+            new Vector3(x-(-31), y-39, 1),
+            new Vector3(x-(-39), y-31, 1),
+            new Vector3(x-(-45), y-22, 1),
+            new Vector3(x-(-49), y-11, 1)
+           ];
         
-        let teal = [0, 128, 128, 255];
-        this.drawConvexPolygon(ball, teal);
-
+        let red = [255, 0, 0, 255];
+        this.drawConvexPolygon(ball, red);
+        // Need to implement circle thing
+        
     }
 
     //
@@ -177,50 +232,38 @@ class Renderer {
         // TODO: draw at least 3 polygons that spin about their own centers
         //   - have each polygon spin at a different speed / direction
     
-        let twoTriangle = [
-            Vector3(100, 375, 1),
+        let diamond = [
+            Vector3(150, 375, 1),
             Vector3(200, 450, 1),
             Vector3(150, 575, 1),
-            Vector3(175, 550, 1)
+            Vector3(100, 450, 1)
         ];
+
+        let midDiamondx = 150;
+        let midDiamondy = 475;
+
         let teal = [0, 128, 128, 255];
-        this.drawConvexPolygon(twoTriangle, teal);
+        this.drawConvexPolygon(diamond, teal);
 
-        let square = [
-            Vector3(600, 400, 1),
-            Vector3(700, 400, 1),
-            Vector3(700, 500, 1),
-            Vector3(600, 500, 1)
-        ];
+        
+        let squareMidx = 650;
+        let squareMidy = 450;
+
         let color = [100, 0, 255, 255];
-        this.drawConvexPolygon(square, color);
+        this.drawConvexPolygon(this.square, color);
 
-        let polygon = [
+        let triange = [
             Vector3(400, 100, 1),
-            Vector3(475, 170, 1),
-            Vector3(465, 250, 1),
-            Vector3(490, 300, 1),
-            Vector3(390, 350, 1),
-            Vector3(350, 200, 1),
-            Vector3(300, 150, 1),
+            Vector3(500, 100, 1),
+            Vector3(450, 250, 1)
         ];
+
+        let triangleMidx = 450;
+        let triangleMidy = 175;
+
         let col = [240, 120, 66, 255];
-        this.drawConvexPolygon(polygon, col);
+        this.drawConvexPolygon(triange, col);
 
-        let squareTranslate1 = new Matrix(3, 3);
-        mat3x3Translate(squareTranslate1, -650, -450);
-
-        let squareRotate = new Matrix(3,3);
-        mat3x3Rotate(squareRotate, 15);
-
-        let squareTranslate2 = new Matrix(3, 3);
-        mat3x3Translate(squareTranslate2, 650, 450);
-
-        for (let i = 0; i < square.length; i++) {
-            square[i] = Matrix.multiply([squareTranslate2, squareRotate, squareTranslate1, square[i]]);
-        }
-
-        console.log(square);
     }
 
     //
@@ -238,6 +281,7 @@ class Renderer {
         //   - animation should involve all three basic transformation types
         //     (translation, scaling, and rotation)
         
+        //
         
     }
     
