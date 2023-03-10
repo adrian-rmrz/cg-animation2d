@@ -135,8 +135,8 @@ class Renderer {
 
                 let translate = new Matrix(3, 3);
 
-                this.ballXVel = 0.1 * delta_time * this.ballXFlip;
-                this.ballYVel = 0.1 * delta_time * this.ballYFlip;
+                this.ballXVel = 0.5 * delta_time * this.ballXFlip;
+                this.ballYVel = 0.5 * delta_time * this.ballYFlip;
                 mat3x3Translate(translate, this.ballXVel, this.ballYVel);
 
                 //console.log("translate: " + translate.values);
